@@ -1,0 +1,33 @@
+body {
+    background-color: #B5F4FF;
+}
+h1.h1_helvetica {
+    font-family: Helvetica, sans-serif;
+}
+header {
+    background-color: #007bff;
+}
+nav {
+    color: white;
+    text-decoration: none;
+}
+a:hover {
+    color: darkorange;
+}
+#contenido {
+    padding: 10 px;
+}
+h2.h2_font {
+    font-size: 30px;
+}
+p.p_font {
+    font-size: 14px;
+    font-family: Helvetica, sans-serif;
+    color: #111111;
+}
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
