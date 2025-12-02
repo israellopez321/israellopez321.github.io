@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Imágenes con estilo</title>
+    <style>
+        div{
+            width: 200px;
+            height: 200px;
+            background-size: 50px;
+            background-image: url("../img/gato.png");
+            border: 3px solid;
+        }
+        #div1{
+            background-position: center center;
+            border-color: red;
+            background-repeat: no-repeat;
+        }
+        #div2{
+            background-position: bottom left;
+            border-color: blue;
+            background-repeat: repeat-x;
+        }
+        #div3{
+            background-position: bottom right;
+            border-color: green;
+            background-repeat: repeat-y;
+        }
+    </style>
+</head>
+<body>
+<div id="div1"></div>
+<div id="div2"></div>
+<div id="div3"></div>
+</body>
+</html>
