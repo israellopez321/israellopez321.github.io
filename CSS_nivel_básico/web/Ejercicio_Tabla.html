@@ -5,17 +5,39 @@
     <title>Ejercicio Tabla</title>
     <style>
         #t1{
-            border: 2px solid black;
             width: 50%;
             margin: 0 auto;
+            border-color: blue;
+        }
+        #t1,#estilo_td{
+            border: 2px solid;
         }
         #estilo_td{
-            border: 2px solid black;
             padding: 10px;
+            border-color: red;
+        }
+        .celda{
+
+        }
+        #t2{
+
         }
     </style>
 </head>
 <body>
+<table id="t0" border="1" width="50%" align="center" cellpadding="10px">
+    <tr>
+        <td>Tutoriales En Linea 1</td>
+        <td>Tutoriales En Linea 2</td>
+        <td>Tutoriales En Linea 3</td>
+    </tr>
+    <tr>
+        <td>Tutoriales En Linea 1</td>
+        <td>Tutoriales En Linea 2</td>
+        <td>Tutoriales En Linea 3</td>
+    </tr>
+</table>
+
 <table id="t1">
     <tr>
 
@@ -38,5 +60,14 @@
 
     </tr>
 </table>
+<div id="t2">
+    <div id="c1" class="celda">Tutoriales En Linea 1</div>
+    <div id="c1" class="celda">Tutoriales En Linea 2</div>
+    <div id="c1" class="celda">Tutoriales En Linea 3</div>
+    <div id="c1" class="celda">Tutoriales En Linea 1</div>
+    <div id="c1" class="celda">Tutoriales En Linea 2</div>
+    <div id="c1" class="celda">Tutoriales En Linea 3</div>
+
+</div>
 </body>
 </html>
