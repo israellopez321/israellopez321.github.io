@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bloque C</title>
+</head>
+<body>
+
+    <script>
+        //¿Eres Mayor de Edad?:
+        let numero = prompt("Introduzca su edad:")
+        let miEdad = Number(numero);
+        let mayorEdad = miEdad >= 18;
+        if (mayorEdad) {
+            alert("Es mayor de edad")
+        } else {
+            alert("Es menor de edad")
+        }
+
+        //Verificador de Invitados:
+        let nombreInvitado = prompt("Introduzca su nombre:")
+
+        if (nombreInvitado === "Admin") {
+
+            console.log("Acceso total")
+        } else {
+            console.log("Acceso limitado")
+        }
+
+        //Números impares
+        let numeroConsola = prompt("Introduzca un numero:");
+        let numeroImpar = Number(numeroConsola);
+
+        for (let i = 1; i <= numeroImpar; i++){
+            if (i % 2 == 1) {
+                console.log(i);
+            }
+
+
+        }
+
+
+    </script>
+
+</body>
+</html>
