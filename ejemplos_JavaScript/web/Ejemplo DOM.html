@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio DOM</title>
+</head>
+<body>
+
+<h1 id="titulo">Hola</h1>
+<button class="boton">Hazme CLick</button>
+
+
+<script>
+  const titulo = document.getElementById('titulo');
+  let cabeceras = ""
+  for(let i = 1; i <= 1; i++){
+    cabeceras = cabeceras + "<h" + i + ">Cabecera H" + i + "</h" + i + ">";
+  }
+
+  titulo.innerHTML = cabeceras;
+
+  const boton = document.querySelector(".boton");
+  boton.style.backgroundColor = "blue";
+  boton.style.color = "white";
+
+  document.querySelector(".boton").addEventListener("click",
+          function(){
+            titulo.style.color = "blue";
+  });
+
+  //Boton rojo
+  const botonRojo = document.createElement("button");
+  botonRojo.className = "rojo";
+  botonRojo.textContent = "Presiona boton";
+  botonRojo.style.backgroundColor = "red";
+  botonRojo.style.color = "white";
+  document.body.appendChild(botonRojo);
+
+  document.querySelector(".rojo").addEventListener("click",
+          function(){
+            titulo.style.color = "red";
+
+  })
+
+  //Boton verde
+  const botonVerde = document.createElement("button");
+  botonVerde.className = "verde";
+  botonVerde.textContent = "Presiona boton";
+  botonVerde.style.backgroundColor = "green";
+  botonVerde.style.color = "white";
+  document.body.appendChild(botonVerde);
+
+  document.querySelector(".verde").addEventListener("click",
+          function(){
+            titulo.style.color = "green";
+
+  })
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 2 </title>
+</head>
+<body>
+<h1>Ejercicio 2</h1>
+
+<h2>Par o impar</h2>
+<!--Par o impar-->
+<!--Input para introducir numero leido-->
+<input type="number" id="numero" name="NumeroParOImpar" placeholder="Introduzca un numero">
+
+<button id="esPar"> ¿Par o Impar? </button>
+<br><br>
+<span id="resultado"></span>
+<br><br>
+<hr style="border: none; height: 2px; background-color: black;">
+
+<!--Puede votar?-->
+
+<h2>Puedes votar?</h2>
+
+<input type="number" id="edad" name="edad" placeholder="Introduzca su edad">
+
+
+
+<script>
+  //Leer numero introducido
+  let numero = 0;
+  numero = document.getElementById("numero");
+  let resultado = null;
+  resultado = document.getElementById("resultado");
+
+  //Funcion del boton para calcular si es par o impar
+  document.querySelector("#esPar").addEventListener("click",
+          function(){
+            let n1 = Number(numero.value);
+
+            if (numero % 2 === 0){
+              resultado.textContent = "El número es par";
+            } else {
+              resultado.textContent = "El número es impar";
+            }
+          });
+
+
+
+</script>
+</body>
+</html>

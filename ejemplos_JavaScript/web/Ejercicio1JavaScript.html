@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<h2>Ejercicio 1</h2>
+
+<label for="numero1">Primer número: </label>
+<input type="number" id="numero1" name="primerNumero" placeholder="Introduzca el primer numero"> <br>
+
+<label for="numero2">Segundo número: </label>
+<input type="number" id="numero2" name="segundoNumero" placeholder="Introduzca el segundo numero"> <br>
+
+
+<button id="suma">+</button>
+<button id="resta">-</button>
+<button id="multiplicacion">x</button>
+<button id="division">/</button>
+
+<br><br>
+
+<span id="resultado">Resultado:</span>
+
+<script>
+let numero1 = 0;
+let numero2 = 0;
+let resultado = 0;
+numero1 = document.getElementById("numero1");
+numero2 = document.getElementById("numero2");
+resultado = document.getElementById("resultado");
+
+//Funcion boton suma
+document.querySelector("#suma").addEventListener("click",
+    function(){
+        let n1 = Number(numero1.value);
+        let n2 = Number(numero2.value);
+
+        resultado.textContent = "Resultado: " + (n1 + n2);
+
+    });
+
+//Funcion boton resta
+document.querySelector("#resta").addEventListener("click",
+    function(){
+        let n1 = Number(numero1.value);
+        let n2 = Number(numero2.value);
+
+        resultado.textContent = "Resultado: " + (n1 - n2);
+
+    });
+
+//Funcion boton multiplicación
+document.querySelector("#multiplicacion").addEventListener("click",
+    function(){
+        let n1 = Number(numero1.value);
+        let n2 = Number(numero2.value);
+
+        resultado.textContent = "Resultado: " + (n1 * n2);
+
+    });
+
+//Funcion boton division
+document.querySelector("#division").addEventListener("click",
+    function(){
+        let n1 = Number(numero1.value);
+        let n2 = Number(numero2.value);
+
+        resultado.textContent = "Resultado: " + (n1 / n2);
+
+    });
+
+
+</script>
+</body>
+</html>
