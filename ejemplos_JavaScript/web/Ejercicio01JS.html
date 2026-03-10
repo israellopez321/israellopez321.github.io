@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicios 1: Javascript</title>
+</head>
+<body>
+<label for="nombre1">Nombre:</label>
+<input type="text" id="nombre1" name="edad" placeholder="Introduzca su nombre">
+
+<label for="edad1">Edad:</label>
+<input type="number" id="edad1" name="edad" placeholder="Introduzca su edad">
+
+<button id="enviar">Enviar</button>
+
+<p>Mi nombre es <span id="nombre"></span> y tengo <span id="edad"></span> años</p>
+
+<hr style="border: none; height: 2px; background-color: black;">
+
+    <!--Segunda parte del ejercicio-->
+
+<label for="numero1">Primer número:</label>
+<input type="number" id="numero1" name="numero" placeholder="Introduzca un numero">
+
+<label for="numero2">Otro número:</label>
+<input type="number" id="numero2" name="numero" placeholder="Introduzca el siguiente numero">
+
+<button id="suma">+</button>
+<button id="resta">-</button>
+<button id="multiplicacion">x</button>
+<button id="division">/</button>
+
+<br><br>
+
+<span id="resultado">Resultado:</span>
+
+<script>
+        //Declara una variable con tu nombre y otra con tu edad
+    //Datos introducidos
+let nombreIntroducida = document.getElementById('nombre1');
+let edadIntroducida = document.getElementById('edad1');
+
+    //Datos del texto
+let nombre = document.getElementById('nombre');
+let edad = document.getElementById('edad');
+
+document.querySelector("#enviar").addEventListener('click',
+    function(){
+        nombre.textContent = nombreIntroducida.value;
+        edad.textContent = edadIntroducida.value;
+    })
+
+        //Parte dos ejercicio
+
+        let numero1 = 0;
+        let numero2 = 0;
+        let resultado = 0;
+        numero1 = document.getElementById("numero1");
+        numero2 = document.getElementById("numero2");
+        resultado = document.getElementById("resultado");
+
+        //Funcion boton suma
+        document.querySelector("#suma").addEventListener("click",
+            function(){
+                let n1 = Number(numero1.value);
+                let n2 = Number(numero2.value);
+
+                resultado.textContent = "Resultado: " + (n1 + n2);
+
+            });
+
+        //Funcion boton resta
+        document.querySelector("#resta").addEventListener("click",
+            function(){
+                let n1 = Number(numero1.value);
+                let n2 = Number(numero2.value);
+
+                resultado.textContent = "Resultado: " + (n1 - n2);
+
+            });
+
+        //Funcion boton multiplicación
+        document.querySelector("#multiplicacion").addEventListener("click",
+            function(){
+                let n1 = Number(numero1.value);
+                let n2 = Number(numero2.value);
+
+                resultado.textContent = "Resultado: " + (n1 * n2);
+
+            });
+
+        //Funcion boton division
+        document.querySelector("#division").addEventListener("click",
+            function(){
+                let n1 = Number(numero1.value);
+                let n2 = Number(numero2.value);
+
+                resultado.textContent = "Resultado: " + (n1 / n2);
+
+            });
+
+
+</script>
+</body>
+</html>
