@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Practica JSON</title>
+    <script
+        src="https://code.jquery.com/jquery-4.0.0.js"
+        integrity="sha256-9fsHeVnKBvqh3FB2HYu7g2xseAZ5MlN6Kz/qnkASV8U="
+        crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <input type="text" id="nombreIn"  name="nombre" placeholder="Introduzca su nombre">
+    <input type="text" id="apellidosIn"  name="apellidos" placeholder="Introduzca su apellidos">
+    <input type="text" id="edadIn"  name="edad" placeholder="Introduzca su edad">
+    <input type="text" id="ciudadIn"  name="ciudad" placeholder="Introduzca tu ciudad">
+    <button type="button" id="btnEnvio">Enviar</button>
+
+
+<table border="1" style="text-align: center;">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Apellidos</th>
+            <th>Edad</th>
+            <th>Ciudad</th>
+        </tr>
+    </thead>
+    <tbody id="tr2">
+        <tr>
+            <td id="nombre"></td>
+            <td id="edad"></td>
+            <td id="apellidos"></td>
+            <td id="ciudad"></td>
+        </tr>
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function () {
+
+        $("#btnEnvio").click(function () {
+            inputDatos();
+        })
+
+        let obj = {nombre: "Alberto", apellidos: "García", edad: "26", ciudad: "Granada"}
+
+        let obj_serializado = enviar(obj);
+
+
+        let obj_recuperado= recibir(obj_serializado);
+
+        $("#nombre").text(obj_recuperado.nombre);
+        $("#edad").text(obj_recuperado.edad);
+        $("#apellidos").text(obj_recuperado.apellidos);
+        $("#ciudad").text(obj_recuperado.ciudad);
+
+
+    })
+
+    function serializar(obj) {
+        return JSON.stringify(obj)
+    }
+
+    function deserializar(objJson) {
+        return JSON.parse(objJson)
+    }
+
+    function enviar(obj){
+        console.log("Serializado: " + obj.nombre);
+        return serializar(obj);
+    }
+
+    function recibir(json_serializado){
+        console.log("Deserializado: " + json_serializado);
+        return deserializar(json_serializado);
+    }
+    
+    function insertarDatos(obj) {
+        $("#tr2").append(
+            "<tr><td>" + obj.nombre + "</td>" +
+            "<td>" + obj.edad + "</td>" +
+            "<td>" + obj.apellidos + "</td>" +
+            "<td>" + obj.ciudad + "</td></tr>"
+        );
+
+        
+    }
+    
+    function inputDatos(){
+        let nombre = $("#nombreIn").val();
+        let apellidos = $("#apellidosIn").val();
+        let edad = $("#edadIn").val();
+        let ciudad = $("#ciudadIn").val();
+
+        let obj = {
+            "nombre": nombre,
+            "apellidos": apellidos,
+            "edad": edad,
+            "ciudad": ciudad,
+        }
+
+        insertarDatos(obj);
+    }
+
+</script>
+
+
+</body>
+</html>
