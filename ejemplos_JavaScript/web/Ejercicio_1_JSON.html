@@ -43,18 +43,6 @@
             inputDatos();
         })
 
-        let obj = {nombre: "Alberto", apellidos: "García", edad: "26", ciudad: "Granada"}
-
-        let obj_serializado = enviar(obj);
-
-
-        let obj_recuperado= recibir(obj_serializado);
-
-        $("#nombre").text(obj_recuperado.nombre);
-        $("#edad").text(obj_recuperado.edad);
-        $("#apellidos").text(obj_recuperado.apellidos);
-        $("#ciudad").text(obj_recuperado.ciudad);
-
 
     })
 
