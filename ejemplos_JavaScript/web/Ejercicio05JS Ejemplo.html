@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Adivina el número</title>
+</head>
+<body>
+
+<h1>🎯 Adivina el número (1 - 100)</h1>
+
+<p>Puntos totales: <span id="puntos">0</span></p>
+<p>Cartera: <span id="cartera">10</span></p>
+<p>Partidas jugadas: <span id="jugadas">0</span></p>
+<p>Aciertos: <span id="aciertos">0</span></p>
+
+<input type="number" id="numero" placeholder="Introduce un número">
+<button onclick="comprobar()">Probar</button>
+<button onclick="reiniciar()">Reiniciar</button>
+
+<p id="mensaje"></p>
+
+<script>
+    let numeroSecreto;
+    let cartera;
+    let puntos = 0;
+    let jugadas = 0;
+    let aciertos = 0;
+
+    function nuevoNumero() {
+        numeroSecreto = Math.floor(Math.random() * 100) + 1;
+        cartera = 10;
+        document.getElementById("cartera").textContent = cartera;
+        document.getElementById("mensaje").textContent = "";
+    }
+
+    function comprobar() {
+        let valor = parseInt(document.getElementById("numero").value);
+
+        if (isNaN(valor)) {
+            document.getElementById("mensaje").textContent = "⚠️ Introduce un número válido";
+            return;
+        }
+
+        if (cartera <= 0) {
+            document.getElementById("mensaje").textContent = "💀 Has perdido. Reinicia el juego.";
+            return;
+        }
+
+        if (valor === numeroSecreto) {
+            puntos += cartera;
+            aciertos++;
+            jugadas++;
+
+            document.getElementById("mensaje").textContent = "🎉 ¡Correcto!";
+            document.getElementById("puntos").textContent = puntos;
+            document.getElementById("aciertos").textContent = aciertos;
+            document.getElementById("jugadas").textContent = jugadas;
+
+            nuevoNumero();
+        } else {
+            cartera--;
+            document.getElementById("cartera").textContent = cartera;
+
+            if (valor < numeroSecreto) {
+                document.getElementById("mensaje").textContent = "📉 El número es mayor";
+            } else {
+                document.getElementById("mensaje").textContent = "📈 El número es menor";
+            }
+
+            if (cartera === 0) {
+                jugadas++;
+                document.getElementById("jugadas").textContent = jugadas;
+                document.getElementById("mensaje").textContent = "💀 Te quedaste sin puntos. Has perdido.";
+            }
+        }
+    }
+
+    function reiniciar() {
+        puntos = 0;
+        jugadas = 0;
+        aciertos = 0;
+
+        document.getElementById("puntos").textContent = puntos;
+        document.getElementById("jugadas").textContent = jugadas;
+        document.getElementById("aciertos").textContent = aciertos;
+
+        nuevoNumero();
+    }
+
+    // Iniciar juego al cargar
+    nuevoNumero();
+</script>
+
+</body>
+</html>

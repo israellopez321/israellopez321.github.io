@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicios 5: Javascript</title>
+    <script
+            src="https://code.jquery.com/jquery-4.0.0.js"
+            integrity="sha256-9fsHeVnKBvqh3FB2HYu7g2xseAZ5MlN6Kz/qnkASV8U="
+            crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <h1>Adivina el numero</h1>
+    <br>
+    <!--Le preguntamos al usuario por el número-->
+    <label for="numero">Introduzca un número</label>
+    <input type="number" id="numero" min="1" max="100" placeholder="Adivina el número">
+    <button type="button" id="adivinar">Enviar</button>
+    <br>
+    <!--Le mostramos las estadísticas y datos-->
+    <div id="resultado"></div>
+    <div id="cartera"></div>
+    <div id="puntos"></div>
+
+<script>
+    let numeroRandom = Math.floor(Math.random() * 101);
+    let puntos = 0;
+    let partida = 0;
+    let cartera = 10;
+    let numero;
+    let resultado = document.getElementById("resultado");
+    let verCartera = document.getElementById("cartera");
+    let verPuntos = document.getElementById("puntos");
+
+    do{
+        partida++;
+        document.querySelector("#adivinar").addEventListener("click",
+            function(){
+                if (numero === numeroRandom){
+                    resultado.textContent = "Has Acertado el número"
+                    puntos += cartera;
+                    verCartera.textContent = cartera.value;
+                    verPuntos.textContent = puntos.value;
+
+
+                } else if (numero !== numeroRandom){
+                    cartera--;
+                    if (numero < numeroRandom){
+                        resultado.textContent = "Numero incorrecto, el numero es menor "  ;
+
+
+                    }
+
+                }
+
+            })
+        console.log(numero);
+
+
+
+
+    }while(cartera < 0)
+
+
+    function mostrarDatos(){
+
+
+    }
+
+</script>
+
+</body>
+</html>
