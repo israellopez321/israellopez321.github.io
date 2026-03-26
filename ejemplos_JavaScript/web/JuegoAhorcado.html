@@ -38,10 +38,10 @@
     }
 
     function comprobarLetra() {
-        let input = document.getElementById("letra");
-        let letra = input.value.toLowerCase();
+        let letraIntroducida = document.getElementById("letra");
+        let letra = letraIntroducida.value.toLowerCase();
 
-        input.value = ""; // limpiar input
+        letraIntroducida.value = ""; // limpiar input
 
         // Validación básica
         if (letra === "") return;
@@ -63,8 +63,6 @@
             document.getElementById("mensaje").textContent = "¡Has ganado!";
         }
     }
-
-
 </script>
 </body>
 </html>
