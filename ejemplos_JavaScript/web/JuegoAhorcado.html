@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+
+<script>
+    let numerosRandom = Math.floor(Math.random() * palabras.length);
+    let palabras = ["javascript","programacion", "desarrollo"];
+    let letras = palabras[numerosRandom].split('');
+    let letraIntroducida;
+    let acertados = [];
+    let erroneos = [];
+
+
+    function comprobar( letraIntroducida ) {
+        for(let i = 0; i < letras.length; ++i) {
+
+            if(letras[i] === a){
+
+                acertados.push(letras[i]);
+
+            }else{
+
+                erroneos.push(letras[i]);
+            }
+
+
+        }
+
+    }
+
+
+</script>
+</body>
+</html>

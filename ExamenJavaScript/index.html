@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema de Control de Acceso a Parking</title>
+    <script
+            src="https://code.jquery.com/jquery-4.0.0.js"
+            integrity="sha256-9fsHeVnKBvqh3FB2HYu7g2xseAZ5MlN6Kz/qnkASV8U="
+            crossorigin="anonymous"></script>
+</head>
+<body>
+
+<h2>Control de Acceso Parking</h2>
+
+<!--Matricula y plazas-->
+<label for="matricula">Matrícula:</label>
+<input type="text" id="matricula" placeholder="Introduzca la matrícula">
+<br>
+
+<label for="plaza">Número de plaza:</label>
+<input type="number" id="plaza" min="1" max="20" placeholder="Introduzca la plaza">
+<br>
+
+<button onclick="" id="aparcar">Aparcar Vehículo</button>
+
+<br><br>
+
+<!--Tabla sobre plazas ocupadas-->
+<table border="1" style="text-align: center;">
+    <thead>
+        <tr>
+            <th>NºPlaza</th>
+            <th>Matrícula</th>
+            <th>Salida</th>
+        </tr>
+    </thead>
+    <tbody id="tr2">
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+<br><br>
+
+<!--Botón de liberación de plazas-->
+<label for="liberarPlaza">Plaza A Liberar:</label>
+<input type="number" id="liberarPlaza" min="1" max="20" placeholder="Introduzca la plaza a liberar">
+<br>
+<button onclick="" id="liberar">Liberar plaza</button>
+
+<script>
+    let matricula = document.getElementById("matricula");
+    let plaza = document.getElementById("plaza");
+
+    let parking = ["L","L","L","L","L","L","L","L","L","L","L","L","L","L","L","L","L","L","L","L"];
+
+    let plazaALiberar = document.getElementById("liberarPlaza");
+
+    //Boton para reservar aparcamiento
+    document.getElementById("aparcar").addEventListener("click",
+        function(){
+
+        if (comprobarMatricula(matricula) && comprobarPlaza(parking, plaza)){
+
+            parking[plaza-1] = "O";
+
+            insertarDatos(matricula, plaza, parking);
+
+        }
+        })
+
+    //Boton para liberar aparcamiento
+    document.getElementById("liberar").addEventListener("click", function(){
+
+        liberarPlaza(parking, plazaALiberar);
+
+    })
+
+    //Comprobar si el campo matricula está lleno
+    function comprobarMatricula(matricula){
+        let esPosible = true;
+
+        if (matricula.value === ""){
+
+            let noMatricula = document.createElement("div");
+
+            noMatricula.textContent = "EL Campo matrícula esta vacío";
+            noMatricula.style.color = "red";
+
+            document.body.appendChild(noMatricula);
+
+            esPosible = false;
+        }
+
+        return esPosible;
+    }
+
+    //Comprobar si la plaza esta libre
+    function comprobarPlaza(parking,  plaza){
+
+        let plazaLibre = false;
+
+        if(parking[plaza - 1] === "L"){
+            let siPlaza = document.createElement("div");
+
+            siPlaza.textContent = "Plaza Libre";
+            siPlaza.style.color = "green";
+
+            document.body.appendChild(siPlaza);
+
+            plazaLibre = true;
+
+        } else if (parking[plaza - 1] === "O") {
+
+            let noPlaza = document.createElement("div");
+
+            noPlaza.textContent = "Esta ocupada";
+            noPlaza.style.color = "red";
+
+            document.body.appendChild(noPlaza);
+
+        }
+        return plazaLibre;
+    }
+
+    //Insertar datos en la tabla
+    function insertarDatos ( matricula, plaza, parking) {
+
+        $("#tr2").append(
+            "<tr><td>" + plaza + "</td>" +
+            "<td>" + matricula + "</td>" +
+            "<td>" + parking[plaza - 1] + "</td></tr>"
+        );
+    }
+
+    //Funcion para liberar una plaza expecifica
+    function liberarPlaza(parking,plazaALiberar){
+
+        parking[plazaALiberar-1] = "L";
+
+    }
+
+</script>
+</body>
+</html>
