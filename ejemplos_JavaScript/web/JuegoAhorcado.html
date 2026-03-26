@@ -1,37 +1,67 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Ahorcado</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<h1>Juego del Ahorcado</h1>
 
+<p id="palabra"></p>
+
+<input type="text" id="letra" maxlength="1">
+<button onclick="comprobarLetra()">Enviar</button>
+
+<p id="mensaje"></p>
 
 <script>
-    let numerosRandom = Math.floor(Math.random() * palabras.length);
-    let palabras = ["javascript","programacion", "desarrollo"];
-    let letras = palabras[numerosRandom].split('');
-    let letraIntroducida;
-    let acertados = [];
-    let erroneos = [];
 
+    // Lista de palabras
+    let palabras = ["javascript", "programacion", "desarrollo"];
 
-    function comprobar( letraIntroducida ) {
-        for(let i = 0; i < letras.length; ++i) {
+    // Elegir palabra aleatoria
+    let palabraSecreta = palabras[Math.floor(Math.random() * palabras.length)];
 
-            if(letras[i] === a){
+    // Convertir a array
+    let palabraArray = palabraSecreta.split("");
 
-                acertados.push(letras[i]);
+    // Array de progreso (_ _ _)
+    let progreso = Array(palabraArray.length).fill("_");
 
-            }else{
+    // Mostrar al inicio
+    actualizarPantalla();
 
-                erroneos.push(letras[i]);
+    function actualizarPantalla() {
+        document.getElementById("palabra").textContent = progreso.join(" ");
+    }
+
+    function comprobarLetra() {
+        let input = document.getElementById("letra");
+        let letra = input.value.toLowerCase();
+
+        input.value = ""; // limpiar input
+
+        // Validación básica
+        if (letra === "") return;
+
+        let acierto = false;
+
+        // Recorrer palabra
+        for (let i = 0; i < palabraArray.length; i++) {
+            if (palabraArray[i] === letra) {
+                progreso[i] = letra;
+                acierto = true;
             }
-
-
         }
 
+        actualizarPantalla();
+
+        // Comprobar victoria
+        if (!progreso.includes("_")) {
+            document.getElementById("mensaje").textContent = "¡Has ganado!";
+        }
     }
 
 
