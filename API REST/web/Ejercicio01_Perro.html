@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 1: Perros</title>
+</head>
+<body>
+
+<h1>Perros</h1>
+
+<h6>Botón Perro Random</h6>
+<button onclick="mostrarRandom()">Randomizar</button>
+<br><br>
+
+<h4>Selector</h4>
+<select id="razas" onchange="mostrarPorRaza()">
+    <option value="">...</option>
+</select>
+
+<br><br>
+
+<img src="" alt="Perro Random" id="PerroRandom" width="300" height="300">
+<br><br>
+
+<script>
+
+    function mostrarRandom() {
+        fetch('https://dog.ceo/api/breeds/image/random')
+            .then(respuesta => respuesta.json())
+            .then(perroRand => {
+                document.getElementById('PerroRandom').src = perroRand.message;
+            });
+    }
+
+    function opcionRazas() {
+        fetch('https://dog.ceo/api/breeds/list/all')
+            .then(respuesta => respuesta.json())
+            .then(data => {
+
+                const razas = data.message;
+
+                for (let raza in razas) {
+
+                    if (razas[raza].length === 0) {
+                        agregarOpcion(raza, raza);
+                    } else {
+                        razas[raza].forEach(subraza => {
+                            const valor = `${raza}/${subraza}`;
+                            const texto = `${raza} - ${subraza}`;
+                            agregarOpcion(valor, texto);
+                        });
+                    }
+                }
+            });
+    }
+
+    function agregarOpcion(valor, texto) {
+        const opcion = document.createElement("option");
+        opcion.value = valor;
+        opcion.textContent = texto;
+        document.getElementById("razas").appendChild(opcion);
+    }
+
+    function mostrarPorRaza() {
+        const seleccion = document.getElementById("razas").value;
+
+        if (!seleccion) return;
+
+        const url = `https://dog.ceo/api/breed/${seleccion}/images/random`;
+
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("PerroRandom").src = data.message;
+            });
+    }
+
+    window.onload = opcionRazas;
+
+</script>
+
+</body>
+</html>
