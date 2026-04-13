@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Clima Local</title>
+</head>
+<body>
+
+<h1>Consulta el clima</h1>
+
+<input type="text" id="ciudadInput" placeholder="Introduce una ciudad">
+<button onclick="buscarClima()">Buscar</button>
+
+<h2 id="ciudad"></h2>
+<p id="temperatura"></p>
+<p id="viento"></p>
+
+<script>
+    async function buscarClima() {
+        const ciudad = document.getElementById("ciudadInput").value;
+
+        if (!ciudad) {
+            alert("Introduce una ciudad");
+            return;
+        }
+
+        try {
+            // 1) Obtener coordenadas
+            const geoRes = await fetch(
+                `https://geocoding-api.open-meteo.com/v1/search?name=${ciudad}`
+            );
+            const geoData = await geoRes.json();
+
+            if (!geoData.results || geoData.results.length === 0) {
+                alert("Ciudad no encontrada");
+                return;
+            }
+
+            const { latitude, longitude, name } = geoData.results[0];
+
+            // 2) Obtener clima
+            const climaRes = await fetch(
+                `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`
+            );
+            const climaData = await climaRes.json();
+
+            const clima = climaData.current_weather;
+
+            // Mostrar datos
+            document.getElementById("ciudad").textContent = "Ciudad: " + name;
+            document.getElementById("temperatura").textContent = "Temperatura: " + clima.temperature + "°C";
+            document.getElementById("viento").textContent = "Viento: " + clima.windspeed + " km/h";
+
+            // 3) Cambiar fondo según is_day
+            if (clima.is_day === 1) {
+                document.body.style.backgroundColor = "#e6f7ff"; // día
+            } else {
+                document.body.style.backgroundColor = "#1a1a1a"; // noche
+                document.body.style.color = "white";
+            }
+
+        } catch (error) {
+            console.log("Error:", error);
+        }
+    }
+</script>
+
+</body>
+</html>

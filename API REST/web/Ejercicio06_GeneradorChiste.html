@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Chistes de Chuck Norris</title>
+</head>
+<body>
+
+<h1>Generador de Chistes</h1>
+
+<label for="categorias">Categoría:</label>
+<select id="categorias"></select>
+
+<button onclick="generarChiste()">Cuéntame un chiste</button>
+
+<h2>Chiste:</h2>
+<p id="chiste" style="font-size: 20px;"></p>
+
+<h3>Historial (últimos 5):</h3>
+<ul id="historial"></ul>
+
+<script>
+    const historial = [];
+
+    // Cargar categorías al iniciar
+    window.onload = async function() {
+        try {
+            const res = await fetch("https://api.chucknorris.io/jokes/categories");
+            const categorias = await res.json();
+
+            const select = document.getElementById("categorias");
+
+            categorias.forEach(cat => {
+                const option = document.createElement("option");
+                option.value = cat;
+                option.textContent = cat;
+                select.appendChild(option);
+            });
+
+        } catch (error) {
+            console.log("Error cargando categorías:", error);
+        }
+    };
+
+    // Generar chiste según categoría
+    async function generarChiste() {
+        const categoria = document.getElementById("categorias").value;
+
+        try {
+            const res = await fetch(`https://api.chucknorris.io/jokes/random?category=${categoria}`);
+            const data = await res.json();
+
+            const texto = data.value;
+
+            // Mostrar chiste actual
+            document.getElementById("chiste").textContent = texto;
+
+            // Añadir al historial
+            historial.unshift(texto);
+
+            // Limitar a 5 chistes
+            if (historial.length > 5) historial.pop();
+
+            actualizarHistorial();
+
+        } catch (error) {
+            console.log("Error obteniendo chiste:", error);
+        }
+    }
+
+    function actualizarHistorial() {
+        const lista = document.getElementById("historial");
+        lista.innerHTML = "";
+
+        historial.forEach(ch => {
+            const li = document.createElement("li");
+            li.textContent = ch;
+            lista.appendChild(li);
+        });
+    }
+</script>
+
+</body>
+</html>

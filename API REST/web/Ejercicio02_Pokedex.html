@@ -1,18 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Pokedex</title>
+    <title>Pokédex Básica</title>
 </head>
 <body>
 
-<h1>Pokedex</h1>
+<h1>Pokédex</h1>
+
+<input type="text" id="searchInput" placeholder="Nombre o ID">
+<button onclick="buscarPokemon()">Buscar</button>
+
+<h2 id="nombre"></h2>
+<img id="imagen" src="" alt="" width="150">
+<ul id="tipos"></ul>
+
+<br>
+<button onclick="pokemonAnterior()">Anterior</button>
+<button onclick="pokemonSiguiente()">Siguiente</button>
 
 <script>
+    let pokemonActual = 1;
 
+    async function buscarPokemon() {
+        const input = document.getElementById("searchInput").value.toLowerCase();
+        if (!input) return;
 
+        try {
+            const respuesta = await fetch(`https://pokeapi.co/api/v2/pokemon/${input}`);
+            if (!respuesta.ok) {
+                alert("Pokémon no encontrado");
+                return;
+            }
 
+            const data = await respuesta.json();
+            mostrarPokemon(data);
+        } catch (error) {
+            console.log("Error:", error);
+        }
+    }
 
+    function mostrarPokemon(data) {
+        pokemonActual = data.id;
+
+        document.getElementById("nombre").textContent = data.name.toUpperCase();
+        document.getElementById("imagen").src = data.sprites.front_default;
+
+        const listaTipos = document.getElementById("tipos");
+        listaTipos.innerHTML = "";
+
+        data.types.forEach(t => {
+            const li = document.createElement("li");
+            li.textContent = t.type.name;
+            listaTipos.appendChild(li);
+        });
+    }
+
+    async function cargarPokemonPorID(id) {
+        try {
+            const respuesta = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+            if (!respuesta.ok) return;
+
+            const data = await respuesta.json();
+            mostrarPokemon(data);
+        } catch (error) {
+            console.log("Error:", error);
+        }
+    }
+
+    function pokemonAnterior() {
+        if (pokemonActual > 1) {
+            cargarPokemonPorID(pokemonActual - 1);
+        }
+    }
+
+    function pokemonSiguiente() {
+        cargarPokemonPorID(pokemonActual + 1);
+    }
 </script>
+
 </body>
 </html>
