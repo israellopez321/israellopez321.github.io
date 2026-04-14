@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio01: Reto</title>
+</head>
+<body>
+<h1>Ejercicio01: Reto</h1>
+
+<label for="nombre">Nombre</label>
+<input type="text" id="nombre" placeholder="Introduce tu nombre">
+
+<label for="apellidos">Apellidos</label>
+<input type="text" id="apellidos" placeholder="Introduce tus apellidos">
+
+<label for="edad">Edad</label>
+<input type="number" id="edad" placeholder="Introduce tu edad">
+
+<label for="ciudad">Ciudad</label>
+<input type="text" id="ciudad" placeholder="Introduce tu ciudad">
+
+
+<button onclick="iniciar()">Iniciar</button>
+
+<table>
+    <thead>
+    <tr>
+        <th>Nombre</th>
+        <th>Apellidos</th>
+        <th>Edad</th>
+        <th>Ciudad</th>
+    </tr>
+    </thead>
+    <tbody id="bodyTabla">
+    </tbody>
+</table>
+
+<script>
+    function iniciar(){
+
+
+
+        let objeto = {
+            nombre: nombre.textContent,
+            apellidos: apellidos.textContent,
+            edad: edad.textContent,
+            ciudad: ciudad.textContent,
+        }
+
+        let objJSON = serializar(objeto);
+        let objObjeto = deserializar(objJSON);
+
+        insertarEnTabla(objObjeto);
+    }
+
+
+</script>
+</body>
+</html>

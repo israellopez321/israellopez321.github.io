@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Ejemplo 1: Consulta de Usuarios</h1>
+
+<button onclick="empezar()">Pulsa y observa la consola</button>
+<br>
+
+<table>
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Apellidos</th>
+            <th>Edad</th>
+            <th>Ciudad</th>
+        </tr>
+    </thead>
+    <tbody id="bodyTabla">
+    </tbody>
+</table>
+
+<script>
+    function empezar(){
+
+        let objeto = {
+            nombre: "Paco",
+            apellido: "Gonzalez",
+            edad: "29",
+            ciudad: "Sevilla",
+        }
+
+        let objJSON = serializar(objeto);
+        let objObjeto = deserializar(objJSON);
+
+        insertarEnTabla(objObjeto);
+    }
+
+    function insertarEnTabla(objJS){
+        let cuerpo = document.getElementById("bodyTabla");
+        let fila = document.createElement("tr");
+        cuerpo.appendChild(fila);
+        insertaCelda(fila, objJS.nombre);
+        insertaCelda(fila, objJS.apellido);
+        insertaCelda(fila, objJS.edad);
+        insertaCelda(fila, objJS.ciudad);
+    }
+
+    function insertaCelda(fila, valor){
+        let celda = document.createElement("td");
+        celda.textContent = valor;
+        fila.appendChild(celda);
+    }
+
+    function serializar(objeto){
+        return JSON.stringify(objeto);
+    }
+
+    function deserializar(objeto){
+        return JSON.parse(objeto);
+    }
+</script>
+</body>
+</html>
