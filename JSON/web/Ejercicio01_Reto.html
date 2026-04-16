@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Ejercicio01: Reto</title>
 </head>
 <body>
+
 <h1>Ejercicio01: Reto</h1>
 
 <label for="nombre">Nombre</label>
@@ -19,10 +20,9 @@
 <label for="ciudad">Ciudad</label>
 <input type="text" id="ciudad" placeholder="Introduce tu ciudad">
 
-
 <button onclick="iniciar()">Iniciar</button>
 
-<table>
+<table border="1" style="margin-top:20px;">
     <thead>
     <tr>
         <th>Nombre</th>
@@ -31,29 +31,66 @@
         <th>Ciudad</th>
     </tr>
     </thead>
-    <tbody id="bodyTabla">
-    </tbody>
+    <tbody id="bodyTabla"></tbody>
 </table>
 
 <script>
-    function iniciar(){
 
-
-
-        let objeto = {
-            nombre: nombre.textContent,
-            apellidos: apellidos.textContent,
-            edad: edad.textContent,
-            ciudad: ciudad.textContent,
-        }
-
-        let objJSON = serializar(objeto);
-        let objObjeto = deserializar(objJSON);
-
-        insertarEnTabla(objObjeto);
+    function serializar(obj) {
+        return JSON.stringify(obj);
     }
 
+    function deserializar(json) {
+        return JSON.parse(json);
+    }
+
+    function insertarTabla(obj) {
+        const body = document.getElementById("bodyTabla");
+
+        const fila = document.createElement("tr");
+
+        const tdNombre = document.createElement("td");
+        tdNombre.textContent = obj.nombre;
+
+        const tdApellidos = document.createElement("td");
+        tdApellidos.textContent = obj.apellidos;
+
+        const tdEdad = document.createElement("td");
+        tdEdad.textContent = obj.edad;
+
+        const tdCiudad = document.createElement("td");
+        tdCiudad.textContent = obj.ciudad;
+
+        fila.appendChild(tdNombre);
+        fila.appendChild(tdApellidos);
+        fila.appendChild(tdEdad);
+        fila.appendChild(tdCiudad);
+
+        body.appendChild(fila);
+    }
+
+    function rellenarTablas(lista) {
+        const body = document.getElementById("bodyTabla");
+        body.innerHTML = ""; // Limpia la tabla
+
+        lista.forEach(obj => insertarTabla(obj));
+    }
+
+    function iniciar() {
+        const objeto = {
+            nombre: document.getElementById("nombre").value,
+            apellidos: document.getElementById("apellidos").value,
+            edad: document.getElementById("edad").value,
+            ciudad: document.getElementById("ciudad").value
+        };
+
+        const objJSON = serializar(objeto);
+        const objObjeto = deserializar(objJSON);
+
+        insertarTabla(objObjeto);
+    }
 
 </script>
+
 </body>
 </html>
