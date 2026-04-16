@@ -37,6 +37,14 @@
     <tbody id="bodyTabla"></tbody>
 </table>
 
+<h2>Estadísticas de edades</h2>
+<div id="estadisticas">
+    <p>Suma: <span id="sumaEdad">0</span></p>
+    <p>Máximo: <span id="maxEdad">0</span></p>
+    <p>Media: <span id="mediaEdad">0</span></p>
+    <p>Mínimo: <span id="minEdad">0</span></p>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 
@@ -68,6 +76,26 @@
 
     $("#iniciar").on("click", function () {
 
+        if ($("#nombre").val().trim() === "") {
+            alert("El campo Nombre es obligatorio");
+            return;
+        }
+
+        if ($("#apellidos").val().trim() === "") {
+            alert("El campo Apellidos es obligatorio");
+            return;
+        }
+
+        if ($("#edad").val().trim() === "") {
+            alert("El campo Edad es obligatorio");
+            return;
+        }
+
+        if ($("#ciudad").val().trim() === "") {
+            alert("El campo Ciudad es obligatorio");
+            return;
+        }
+
         const objeto = {
             nombre: $("#nombre").val(),
             apellidos: $("#apellidos").val(),
@@ -79,12 +107,41 @@
         const objObjeto = deserializar(objJSON);
 
         insertarTabla(objObjeto);
+
+        actualizarEstadisticas();
     });
 
     function eliminarFila(id) {
         $("#" + id).remove();
+        actualizarEstadisticas();
     }
 
+    function actualizarEstadisticas() {
+        let edades = [];
+
+        $("#bodyTabla tr").each(function () {
+            let edad = parseInt($(this).find("td").eq(2).text());
+            edades.push(edad);
+        });
+
+        if (edades.length === 0) {
+            $("#sumaEdad").text(0);
+            $("#maxEdad").text(0);
+            $("#mediaEdad").text(0);
+            $("#minEdad").text(0);
+            return;
+        }
+
+        let suma = edades.reduce((a, b) => a + b, 0);
+        let max = Math.max(...edades);
+        let min = Math.min(...edades);
+        let media = (suma / edades.length).toFixed(2);
+
+        $("#sumaEdad").text(suma);
+        $("#maxEdad").text(max);
+        $("#mediaEdad").text(media);
+        $("#minEdad").text(min);
+    }
 
 </script>
 
