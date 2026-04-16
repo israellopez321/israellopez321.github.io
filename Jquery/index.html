@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio01: Reto con jQuery</title>
+
+    <!-- Cargar jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<h1>Ejercicio01: Reto</h1>
+
+<label for="nombre">Nombre</label>
+<input type="text" id="nombre" placeholder="Introduce tu nombre">
+
+<label for="apellidos">Apellidos</label>
+<input type="text" id="apellidos" placeholder="Introduce tus apellidos">
+
+<label for="edad">Edad</label>
+<input type="number" id="edad" placeholder="Introduce tu edad">
+
+<label for="ciudad">Ciudad</label>
+<input type="text" id="ciudad" placeholder="Introduce tu ciudad">
+
+<button id="btnIniciar">Iniciar</button>
+
+<table border="1" style="margin-top:20px;">
+    <thead>
+    <tr>
+        <th>Nombre</th>
+        <th>Apellidos</th>
+        <th>Edad</th>
+        <th>Ciudad</th>
+    </tr>
+    </thead>
+    <tbody id="bodyTabla"></tbody>
+</table>
+
+<script>
+
+    function serializar(obj) {
+        return JSON.stringify(obj);
+    }
+
+    function deserializar(json) {
+        return JSON.parse(json);
+    }
+
+    function insertarTabla(obj) {
+        $("#bodyTabla").append(`
+            <tr>
+                <td>${obj.nombre}</td>
+                <td>${obj.apellidos}</td>
+                <td>${obj.edad}</td>
+                <td>${obj.ciudad}</td>
+            </tr>
+        `);
+    }
+
+    function rellenarTablas(lista) {
+        $("#bodyTabla").empty(); // Limpia la tabla
+
+        lista.forEach(obj => insertarTabla(obj));
+    }
+
+    $("#btnIniciar").on("click", function () {
+
+        const objeto = {
+            nombre: $("#nombre").val(),
+            apellidos: $("#apellidos").val(),
+            edad: $("#edad").val(),
+            ciudad: $("#ciudad").val()
+        };
+
+        const objJSON = serializar(objeto);
+        const objObjeto = deserializar(objJSON);
+
+        insertarTabla(objObjeto);
+    });
+
+</script>
+
+</body>
+</html>
