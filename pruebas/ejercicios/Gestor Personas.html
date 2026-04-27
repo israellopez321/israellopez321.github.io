@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestor Personas</title>
+</head>
+<body>
+
+    <label for="nombre">Nombre: </label>
+    <input type="text" id="nombre" placeholder="Introduzca su nombre...">
+
+    <label for="apellidos">Apellido: </label>
+    <input type="text" id="apellidos" placeholder="Introduzca su apellido...">
+
+    <label for="edad">edad: </label>
+    <input type="Number" id="edad" placeholder="Introduzca su edad...">
+
+    <label for="ciudad">Ciudad: </label>
+    <input type="text" id="ciudad" placeholder="Introduzca su ciudad...">
+
+    <button onclick="iniciar()">Guardar</button>
+
+    <br><br>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Edad</th>
+                <th>Ciudad</th>
+                <th>Accion</th>
+            </tr>
+        </thead>
+        <tbody class="tbody">
+        </tbody>
+    </table>
+
+    <h2>Estadísticas</h2>
+    <p id="suma"></p>
+    <p id="media"></p>
+    <p id="max"></p>
+    <p id="min"></p>
+
+<script>
+
+    function iniciar(){
+
+        validarCampos();
+
+
+
+
+    }
+
+    function validarCampos(){
+
+    if(nombre.value.trim() === "") return alert("El nombre es obligatorio");
+    if(apellidos.value.trim() === "") return alert("El apellido es obligatorio");
+    if(edad.value.trim() === "") return alert("El apellido es obligatorio");
+    if(ciudad.value.trim() === "") return alert("La ciudad es obligatorio");
+    }
+
+    function serializar(obj) {
+        return JSON.stringify(obj)
+    }
+
+    function deserializar(objJson) {
+        return JSON.parse(objJson)
+    }
+
+    function crearObjeto(){
+        return {
+            nombre: nombre.value,
+            apellidos: apellidos.value,
+            edad: Number(edad.value),
+            ciudad: ciudad.value
+        };
+    }
+
+
+
+</script>
+
+</body>
+</html>
