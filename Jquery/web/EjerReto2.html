@@ -23,7 +23,7 @@
 <label for="ciudad">Ciudad</label>
 <input type="text" id="ciudad" placeholder="Introduce tu ciudad">
 
-<button id="iniciar">Iniciar</button>
+<button id="iniciar">Añadir</button>
 
 <table border="1" style="margin-top:20px;">
     <thead>
@@ -48,7 +48,11 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 
-    let contadorID = 1;
+    $(document).ready(function () {
+
+    let lista = [];
+
+    let contadorID = 0;
 
     function serializar(obj) {
         return JSON.stringify(obj);
@@ -64,13 +68,15 @@
         contadorID++;
 
         $("#bodyTabla").append(`
-              <tr id="${idFila}" onclick="eliminarFila('${idFila}')">
+              <tr id="${idFila}" onclick="eliminarFila('${idFila}', ${contadorID})">
                 <td>${obj.nombre}</td>
                 <td>${obj.apellidos}</td>
                 <td>${obj.edad}</td>
                 <td>${obj.ciudad}</td>
             </tr>
         `);
+
+        lista.push(obj.edad);
     }
 
 
@@ -111,20 +117,18 @@
         actualizarEstadisticas();
     });
 
-    function eliminarFila(id) {
+
+
+    function eliminarFila(id, contadorId) {
         $("#" + id).remove();
+        lista.splice(contadorId,1);
         actualizarEstadisticas();
+
     }
 
     function actualizarEstadisticas() {
-        let edades = [];
 
-        $("#bodyTabla tr").each(function () {
-            let edad = parseInt($(this).find("td").eq(2).text());
-            edades.push(edad);
-        });
-
-        if (edades.length === 0) {
+        if (lista.length === 0) {
             $("#sumaEdad").text(0);
             $("#maxEdad").text(0);
             $("#mediaEdad").text(0);
@@ -132,10 +136,17 @@
             return;
         }
 
-        let suma = edades.reduce((a, b) => a + b, 0);
-        let max = Math.max(...edades);
-        let min = Math.min(...edades);
-        let media = (suma / edades.length).toFixed(2);
+        let suma = 0;
+
+        lista.forEach((valor) => {
+
+            parseInt(suma = suma + valor);
+
+        });
+
+        let max = Math.max(...lista);
+        let min = Math.min(...lista);
+        let media = (suma / lista.length).toFixed(2);
 
         $("#sumaEdad").text(suma);
         $("#maxEdad").text(max);
@@ -143,6 +154,7 @@
         $("#minEdad").text(min);
     }
 
+    })
 </script>
 
 </body>
