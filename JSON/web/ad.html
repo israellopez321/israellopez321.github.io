@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Gestor Avanzado</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        td, th { border: 1px solid #444; padding: 6px; }
+        tr:hover { background: #eef; cursor: pointer; }
+        .editando { background: #fffae6 !important; }
+    </style>
+</head>
+
+<body>
+
+<h2>Gestor Avanzado de Usuarios</h2>
+
+<!-- FORMULARIO -->
+Nombre: <input id="nombre"><br>
+Edad: <input id="edad" type="number"><br>
+Ciudad: <input id="ciudad"><br><br>
+
+<h3>Hobbies (máx 3)</h3>
+<label><input type="checkbox" name="h" value="Deporte"> Deporte</label>
+<label><input type="checkbox" name="h" value="Lectura"> Lectura</label>
+<label><input type="checkbox" name="h" value="Música"> Música</label>
+<label><input type="checkbox" name="h" value="Cine"> Cine</label>
+<label><input type="checkbox" name="h" value="Juegos"> Juegos</label>
+
+<h3>Teléfonos</h3>
+<input id="telefono" placeholder="Añadir teléfono">
+<button onclick="addTelefono()">Añadir</button>
+
+<ul id="listaTelefonos"></ul>
+
+<br>
+<button onclick="insertar()">Insertar usuario</button>
+
+<!-- TABLA -->
+<table>
+    <thead>
+    <tr>
+        <th>Nombre</th>
+        <th>Edad</th>
+        <th>Ciudad</th>
+        <th>Hobbies</th>
+        <th>Teléfonos</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+</table>
+
+<h3>Estadísticas</h3>
+<p id="stats"></p>
+
+<script>
+
+    // =========================
+    // VARIABLES GLOBALES
+    // =========================
+    let usuarios = [];
+    let telefonosTemp = [];
+
+    // =========================
+    // CARGAR DESDE LOCALSTORAGE
+    // =========================
+    if (localStorage.getItem("usuarios")) {
+        usuarios = JSON.parse(localStorage.getItem("usuarios"));
+        generarTabla();
+        calcularStats();
+    }
+
+    // =========================
+    // LIMITAR HOBBIES A 3
+    // =========================
+    $('input[name="h"]').on('change', function () {
+        const marcados = $('input[name="h"]:checked').length;
+        if (marcados >= 3) {
+            $('input[name="h"]:not(:checked)').prop('disabled', true);
+        } else {
+            $('input[name="h"]').prop('disabled', false);
+        }
+    });
+
+    // =========================
+    // AÑADIR TELÉFONO TEMPORAL
+    // =========================
+    function addTelefono() {
+        const tel = $("#telefono").val().trim();
+        if (tel === "") return;
+
+        telefonosTemp.push(tel);
+        $("#listaTelefonos").append(`<li>${tel}</li>`);
+        $("#telefono").val("");
+    }
+
+    // =========================
+    // INSERTAR USUARIO
+    // =========================
+    function insertar() {
+
+        // Validaciones
+        if ($("#nombre").val().trim() === "") return alert("Nombre obligatorio");
+        if ($("#edad").val().trim() === "") return alert("Edad obligatoria");
+        if ($("#ciudad").val().trim() === "") return alert("Ciudad obligatoria");
+
+        const hobbies = $('input[name="h"]:checked')
+            .map(function () { return $(this).val(); })
+            .get();
+
+        const usuario = {
+            id: Date.now(),
+            nombre: $("#nombre").val(),
+            edad: Number($("#edad").val()),
+            ciudad: $("#ciudad").val(),
+            hobbies: hobbies,
+            telefonos: [...telefonosTemp]
+        };
+
+        usuarios.push(usuario);
+
+        // Guardar en localStorage
+        localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+        // Limpiar formulario
+        $("#nombre, #edad, #ciudad").val("");
+        $('input[name="h"]').prop("checked", false).prop("disabled", false);
+        telefonosTemp = [];
+        $("#listaTelefonos").empty();
+
+        generarTabla();
+        calcularStats();
+    }
+
+    // =========================
+    // GENERAR TABLA COMPLETA
+    // =========================
+    function generarTabla() {
+        $("#tbody").empty();
+
+        usuarios.forEach((u, index) => {
+            $("#tbody").append(`
+            <tr id="fila-${u.id}">
+                <td>${u.nombre}</td>
+                <td>${u.edad}</td>
+                <td>${u.ciudad}</td>
+                <td>${u.hobbies.join(", ")}</td>
+                <td>${u.telefonos.join(" / ")}</td>
+                <td>
+                    <button onclick="editar(${u.id})">Editar</button>
+                    <button onclick="eliminar(${u.id})">Eliminar</button>
+                </td>
+            </tr>
+        `);
+        });
+    }
+
+    // =========================
+    // ELIMINAR USUARIO
+    // =========================
+    function eliminar(id) {
+        usuarios = usuarios.filter(u => u.id !== id);
+        localStorage.setItem("usuarios", JSON.stringify(usuarios));
+        $(`#fila-${id}`).fadeOut(300, function () { $(this).remove(); });
+        calcularStats();
+    }
+
+    // =========================
+    // EDITAR USUARIO
+    // =========================
+    function editar(id) {
+        const fila = $(`#fila-${id}`);
+        fila.addClass("editando");
+
+        const usuario = usuarios.find(u => u.id === id);
+
+        fila.html(`
+        <td><input id="edit-nombre" value="${usuario.nombre}"></td>
+        <td><input id="edit-edad" type="number" value="${usuario.edad}"></td>
+        <td><input id="edit-ciudad" value="${usuario.ciudad}"></td>
+        <td>${usuario.hobbies.join(", ")}</td>
+        <td>${usuario.telefonos.join(" / ")}</td>
+        <td>
+            <button onclick="guardar(${id})">Guardar</button>
+            <button onclick="generarTabla()">Cancelar</button>
+        </td>
+    `);
+    }
+
+    // =========================
+    // GUARDAR EDICIÓN
+    // =========================
+    function guardar(id) {
+        const usuario = usuarios.find(u => u.id === id);
+
+        usuario.nombre = $("#edit-nombre").val();
+        usuario.edad = Number($("#edit-edad").val());
+        usuario.ciudad = $("#edit-ciudad").val();
+
+        localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+        generarTabla();
+        calcularStats();
+    }
+
+    // =========================
+    // ESTADÍSTICAS
+    // =========================
+    function calcularStats() {
+        if (usuarios.length === 0) {
+            $("#stats").text("No hay usuarios.");
+            return;
+        }
+
+        const edades = usuarios.map(u => u.edad);
+        const suma = edades.reduce((a, b) => a + b, 0);
+        const media = (suma / edades.length).toFixed(2);
+        const max = Math.max(...edades);
+        const min = Math.min(...edades);
+
+        $("#stats").html(`
+        Total usuarios: ${usuarios.length}<br>
+        Edad media: ${media}<br>
+        Máxima: ${max}<br>
+        Mínima: ${min}
+    `);
+    }
+
+</script>
+
+</body>
+</html>
