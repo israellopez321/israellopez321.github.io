@@ -3,43 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Ejercicio01: Reto con jQuery</title>
-
-    <!-- Cargar jQuery -->
-
 </head>
 <body>
 
 <h1>Ejercicio01: RetoJquery</h1>
 
 <p>Hobbies:</p>
-<div style="border: 1px solid black;  max-width: 700px"  >
-    <input type="checkbox" id="deporte" name="checks" value="deporte">Deporte
-    <input type="checkbox" id="lectura" name="checks" value="lectura">Lectura
-    <input type="checkbox" id="musica" name="checks" value="música">Música
-    <input type="checkbox" id="juegos" name="checks" value="juegos">Juegos
-    <input type="checkbox" id="cine" name="checks" value="cine">Cine
-    <input type="checkbox" id="teatro" name="checks" value="teatro">Teatro
-    <input type="checkbox" id="coleccionismo" name="checks" value="coleccionismo">Coleccionismo
-    <input type="checkbox" id="bricolaje" name="checks" value="bricolaje">Bricolaje
-    <input type="checkbox" id="cosplay" name="checks" value="cosplay">Cosplay
+<div style="border: 1px solid black; max-width: 700px;">
+    <input type="checkbox" name="checks" value="deporte">Deporte
+    <input type="checkbox" name="checks" value="lectura">Lectura
+    <input type="checkbox" name="checks" value="música">Música
+    <input type="checkbox" name="checks" value="juegos">Juegos
+    <input type="checkbox" name="checks" value="cine">Cine
+    <input type="checkbox" name="checks" value="teatro">Teatro
+    <input type="checkbox" name="checks" value="coleccionismo">Coleccionismo
+    <input type="checkbox" name="checks" value="bricolaje">Bricolaje
+    <input type="checkbox" name="checks" value="cosplay">Cosplay
 </div>
 
 <br>
 
-<label for="nombre">Nombre</label>
-<input type="text" id="nombre" placeholder="Introduce tu nombre">
+<label>Nombre</label>
+<input type="text" id="nombre">
 
-<label for="apellidos">Apellidos</label>
-<input type="text" id="apellidos" placeholder="Introduce tus apellidos">
+<label>Apellidos</label>
+<input type="text" id="apellidos">
 
-<label for="edad">Edad</label>
-<input type="number" id="edad" placeholder="Introduce tu edad">
+<label>Edad</label>
+<input type="number" id="edad">
 
-<label for="ciudad">Ciudad</label>
-<input type="text" id="ciudad" placeholder="Introduce tu ciudad">
+<label>Ciudad</label>
+<input type="text" id="ciudad">
 
 <button id="iniciar">Añadir</button>
-<button id="enviar">Enviar</button>
 
 <table border="1" style="margin-top:20px;">
     <thead>
@@ -62,25 +58,19 @@
     <p>Mínimo: <span id="minEdad">0</span></p>
 </div>
 
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 
     $(document).ready(function () {
 
-        let lista = [];
-        let contadorID = 0;
+        var datos = [];
+        var contadorID = 0;
 
-        let datos = [];
+        function serializar(obj) { return JSON.stringify(obj); }
 
-        function serializar(obj) {
-            return JSON.stringify(obj);
-        }
-
-        function deserializar(json) {
-            return JSON.parse(json);
-        }
-
+        // -------------------------
+        // AÑADIR PERSONA
+        // -------------------------
         $("#iniciar").on("click", function () {
 
             if ($("#nombre").val().trim() === "") { alert("El campo Nombre es obligatorio"); return; }
@@ -88,14 +78,12 @@
             if ($("#edad").val().trim() === "") { alert("El campo Edad es obligatorio"); return; }
             if ($("#ciudad").val().trim() === "") { alert("El campo Ciudad es obligatorio"); return; }
 
-
-            let hobbies = []
-
+            var hobbies = [];
             $("[name='checks']:checked").each(function () {
                 hobbies.push($(this).val());
-            })
+            });
 
-            const objeto = {
+            var objeto = {
                 nombre: $("#nombre").val(),
                 apellidos: $("#apellidos").val(),
                 edad: $("#edad").val(),
@@ -105,65 +93,33 @@
 
             datos.push(objeto);
 
-            const objJSON = serializar(objeto);
-            const objObjeto = deserializar(objJSON);
-
-            insertarTabla(objObjeto);
-            actualizarEstadisticas();
+            insertarFila(objeto);
+            enviarDatosAlServidor();
 
             $("#nombre").val("");
             $("#apellidos").val("");
             $("#edad").val("");
             $("#ciudad").val("");
-
             $("[name='checks']").prop("checked", false).prop("disabled", false);
         });
 
-        $("#enviar").on("click", function () {
+        // -------------------------
+        // INSERTAR FILA EN TABLA
+        // -------------------------
+        function insertarFila(obj) {
 
-            let json = serializar(datos);
+            var idFila = "fila_" + contadorID;
 
-            $.ajax({
-                url: "https://lm.iesnervion.es/eco.php",
-                type: "POST",
-                data: json,
-                contentType: "application/json",
-                success: function (respuesta) {
+            $("#bodyTabla").append(
+                "<tr id='" + idFila + "'>" +
+                "<td>" + obj.nombre + "</td>" +
+                "<td>" + obj.apellidos + "</td>" +
+                "<td>" + obj.edad + "</td>" +
+                "<td>" + obj.ciudad + "</td>" +
+                "<td>" + obj.hobbies + "</td>" +
+                "</tr>"
+            );
 
-                    let r = deserializar(respuesta);
-
-                    alert(
-                        "Suma: " + r.suma +
-                        "\nMedia: " + r.media +
-                        "\nMáximo: " + r.max +
-                        "\nMínimo: " + r.min
-                    );
-
-                    console.log("Lista devuelta:", r.lista);
-                }
-            });
-
-        });
-
-
-        function insertarTabla(obj) {
-
-            let idFila = "fila_" + contadorID;
-
-            $("#bodyTabla").append(`
-            <tr id="${idFila}" data-edad="${obj.edad}">
-                <td>${obj.nombre}</td>
-                <td>${obj.apellidos}</td>
-                <td>${obj.edad}</td>
-                <td>${obj.ciudad}</td>
-                <td>${obj.hobbies}</td>
-            </tr>
-        `);
-
-            // Guardamos la edad como número
-            lista.push(parseInt(obj.edad));
-
-            // Evento de eliminar fila
             $("#" + idFila).on("click", function () {
                 eliminarFila(idFila);
             });
@@ -171,67 +127,89 @@
             contadorID++;
         }
 
-
-
+        // -------------------------
+        // ELIMINAR FILA
+        // -------------------------
         function eliminarFila(id) {
 
-            let edad = parseInt($("#" + id).attr("data-edad"));
+            var fila = $("#" + id);
 
-            // Eliminamos SOLO la primera coincidencia
-            let index = lista.indexOf(edad);
-            if (index !== -1) {
-                lista.splice(index, 1);
+            var nombre = fila.find("td").eq(0).text();
+            var apellidos = fila.find("td").eq(1).text();
+            var edad = fila.find("td").eq(2).text();
+            var ciudad = fila.find("td").eq(3).text();
+
+            var nuevosDatos = [];
+            for (var i = 0; i < datos.length; i++) {
+                var obj = datos[i];
+                if (!(obj.nombre === nombre &&
+                    obj.apellidos === apellidos &&
+                    String(obj.edad) === String(edad) &&
+                    obj.ciudad === ciudad)) {
+
+                    nuevosDatos.push(obj);
+                }
             }
 
-            $("#" + id).remove();
-            actualizarEstadisticas();
+            datos = nuevosDatos;
+
+            fila.remove();
+            enviarDatosAlServidor();
         }
 
-        function actualizarEstadisticas() {
+        // -------------------------
+        // ENVIAR SOLO LAS EDADES A LA API
+        // -------------------------
+        function enviarDatosAlServidor() {
 
-            if (lista.length === 0) {
-                $("#sumaEdad").text(0);
-                $("#maxEdad").text(0);
-                $("#mediaEdad").text(0);
-                $("#minEdad").text(0);
-                return;
+            // Construir array de objetos {edad: numero}
+            var edades = [];
+            for (var i = 0; i < datos.length; i++) {
+                edades.push({ edad: parseInt(datos[i].edad) });
             }
 
-            let suma = 0;
+            console.log("OBJETOS ENVIADOS:", edades);
 
-            lista.forEach((valor) => {
-                suma += valor;
+            var json = JSON.stringify(edades);
+
+            $.ajax({
+                url: "https://lm.iesnervion.es/eco.php",
+                type: "POST",
+                data: json,
+                contentType: "application/json",
+                dataType: "json",
+                success: function (r) {
+
+                    console.log("RESPUESTA OBJETO:", r);
+
+                    // eco.php devuelve:
+                    // { lista: [...], calculos: {suma, min, max, media} }
+
+                    $("#sumaEdad").text(r.calculos.suma);
+                    $("#maxEdad").text(r.calculos.max);
+                    $("#mediaEdad").text(r.calculos.media);
+                    $("#minEdad").text(r.calculos.min);
+                }
             });
-
-            let max = Math.max(...lista);
-            let min = Math.min(...lista);
-            let media = (suma / lista.length).toFixed(2);
-
-            $("#sumaEdad").text(suma);
-            $("#maxEdad").text(max);
-            $("#mediaEdad").text(media);
-            $("#minEdad").text(min);
         }
 
+
+        // -------------------------
+        // LIMITAR HOBBIES A 3
+        // -------------------------
         $("[name='checks']").on("change", function () {
 
-            let marcados = $("[name='checks']:checked");
+            var marcados = $("[name='checks']:checked");
 
             if (marcados.length === 3) {
-                // Deshabilitar todos los NO marcados
                 $("[name='checks']").not(":checked").prop("disabled", true);
             } else {
-                // Volver a habilitar todos
                 $("[name='checks']").prop("disabled", false);
             }
-
         });
-
-
 
     });
 </script>
-
 
 </body>
 </html>
