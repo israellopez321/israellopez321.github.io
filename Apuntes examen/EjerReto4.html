@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio01: Reto con jQuery</title>
+</head>
+<body>
+
+<h1>Ejercicio01: RetoJquery</h1>
+
+<p>Hobbies:</p>
+<div style="border: 1px solid black; max-width: 700px;">
+    <input type="checkbox" name="checks" value="deporte">Deporte
+    <input type="checkbox" name="checks" value="lectura">Lectura
+    <input type="checkbox" name="checks" value="música">Música
+    <input type="checkbox" name="checks" value="juegos">Juegos
+    <input type="checkbox" name="checks" value="cine">Cine
+    <input type="checkbox" name="checks" value="teatro">Teatro
+    <input type="checkbox" name="checks" value="coleccionismo">Coleccionismo
+    <input type="checkbox" name="checks" value="bricolaje">Bricolaje
+    <input type="checkbox" name="checks" value="cosplay">Cosplay
+</div>
+
+<br>
+
+<label>Nombre</label>
+<input type="text" id="nombre">
+
+<label>Apellidos</label>
+<input type="text" id="apellidos">
+
+<label>Edad</label>
+<input type="number" id="edad">
+
+<label>Ciudad</label>
+<input type="text" id="ciudad">
+
+<button id="iniciar">Añadir</button>
+
+<table border="1" style="margin-top:20px;">
+    <thead>
+    <tr>
+        <th>Nombre</th>
+        <th>Apellidos</th>
+        <th>Edad</th>
+        <th>Ciudad</th>
+        <th>Hobbies</th>
+    </tr>
+    </thead>
+    <tbody id="bodyTabla"></tbody>
+</table>
+
+<h2>Estadísticas de edades</h2>
+<div id="estadisticas">
+    <p>Suma: <span id="sumaEdad">0</span></p>
+    <p>Máximo: <span id="maxEdad">0</span></p>
+    <p>Media: <span id="mediaEdad">0</span></p>
+    <p>Mínimo: <span id="minEdad">0</span></p>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+        var datos = [];
+        var contadorID = 0;
+
+        function serializar(obj) { return JSON.stringify(obj); }
+
+        // -------------------------
+        // AÑADIR PERSONA
+        // -------------------------
+        $("#iniciar").on("click", function () {
+
+            if ($("#nombre").val().trim() === "") { alert("El campo Nombre es obligatorio"); return; }
+            if ($("#apellidos").val().trim() === "") { alert("El campo Apellidos es obligatorio"); return; }
+            if ($("#edad").val().trim() === "") { alert("El campo Edad es obligatorio"); return; }
+            if ($("#ciudad").val().trim() === "") { alert("El campo Ciudad es obligatorio"); return; }
+
+            var hobbies = [];
+            $("[name='checks']:checked").each(function () {
+                hobbies.push($(this).val());
+            });
+
+            var objeto = {
+                nombre: $("#nombre").val(),
+                apellidos: $("#apellidos").val(),
+                edad: $("#edad").val(),
+                ciudad: $("#ciudad").val(),
+                hobbies: hobbies
+            };
+
+            datos.push(objeto);
+
+            insertarFila(objeto);
+            enviarDatosAlServidor();
+
+            $("#nombre").val("");
+            $("#apellidos").val("");
+            $("#edad").val("");
+            $("#ciudad").val("");
+            $("[name='checks']").prop("checked", false).prop("disabled", false);
+        });
+
+        // -------------------------
+        // INSERTAR FILA EN TABLA
+        // -------------------------
+        function insertarFila(obj) {
+
+            var idFila = "fila_" + contadorID;
+
+            $("#bodyTabla").append(
+                "<tr id='" + idFila + "'>" +
+                "<td>" + obj.nombre + "</td>" +
+                "<td>" + obj.apellidos + "</td>" +
+                "<td>" + obj.edad + "</td>" +
+                "<td>" + obj.ciudad + "</td>" +
+                "<td>" + obj.hobbies + "</td>" +
+                "</tr>"
+            );
+
+            $("#" + idFila).on("click", function () {
+                eliminarFila(idFila);
+            });
+
+            contadorID++;
+        }
+
+        // -------------------------
+        // ELIMINAR FILA
+        // -------------------------
+        function eliminarFila(id) {
+
+            var fila = $("#" + id);
+
+            var nombre = fila.find("td").eq(0).text();
+            var apellidos = fila.find("td").eq(1).text();
+            var edad = fila.find("td").eq(2).text();
+            var ciudad = fila.find("td").eq(3).text();
+
+            var nuevosDatos = [];
+            for (var i = 0; i < datos.length; i++) {
+                var obj = datos[i];
+                if (!(obj.nombre === nombre &&
+                    obj.apellidos === apellidos &&
+                    String(obj.edad) === String(edad) &&
+                    obj.ciudad === ciudad)) {
+
+                    nuevosDatos.push(obj);
+                }
+            }
+
+            datos = nuevosDatos;
+
+            fila.remove();
+            enviarDatosAlServidor();
+        }
+
+        // -------------------------
+        // ENVIAR SOLO LAS EDADES A LA API
+        // -------------------------
+        function enviarDatosAlServidor() {
+
+            // Construir array de objetos {edad: numero}
+            var edades = [];
+            for (var i = 0; i < datos.length; i++) {
+                edades.push({ edad: parseInt(datos[i].edad) });
+            }
+
+            console.log("OBJETOS ENVIADOS:", edades);
+
+            var json = JSON.stringify(edades);
+
+            $.ajax({
+                url: "https://lm.iesnervion.es/eco.php",
+                type: "POST",
+                data: json,
+                contentType: "application/json",
+                dataType: "json",
+                success: function (r) {
+
+                    console.log("RESPUESTA OBJETO:", r);
+
+                    // eco.php devuelve:
+                    // { lista: [...], calculos: {suma, min, max, media} }
+
+                    $("#sumaEdad").text(r.calculos.suma);
+                    $("#maxEdad").text(r.calculos.max);
+                    $("#mediaEdad").text(r.calculos.media);
+                    $("#minEdad").text(r.calculos.min);
+                }
+            });
+        }
+
+
+        // -------------------------
+        // LIMITAR HOBBIES A 3
+        // -------------------------
+        $("[name='checks']").on("change", function () {
+
+            var marcados = $("[name='checks']:checked");
+
+            if (marcados.length === 3) {
+                $("[name='checks']").not(":checked").prop("disabled", true);
+            } else {
+                $("[name='checks']").prop("disabled", false);
+            }
+        });
+
+    });
+</script>
+</body>
+</html>
