@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio Final JSON + jQuery + AJAX</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        table, td, th { border: 1px solid black; border-collapse: collapse; padding: 6px; }
+        h2 { font-weight: bold; }
+    </style>
+</head>
+
+<body>
+
+<h1>Gestión de Usuarios</h1>
+
+<!-- FORMULARIO -->
+<form id="formulario">
+    Nombre: <input type="text" id="nombre"><br>
+    Apellidos: <input type="text" id="apellidos"><br>
+    Edad: <input type="number" id="edad"><br>
+    Ciudad: <input type="text" id="ciudad"><br><br>
+
+    <strong>Hobbies (máx 3):</strong><br>
+    <label><input type="checkbox" name="hobbies[]" value="Deporte"> Deporte</label>
+    <label><input type="checkbox" name="hobbies[]" value="Lectura"> Lectura</label>
+    <label><input type="checkbox" name="hobbies[]" value="Música"> Música</label>
+    <label><input type="checkbox" name="hobbies[]" value="Juegos"> Juegos</label>
+    <label><input type="checkbox" name="hobbies[]" value="Cine"> Cine</label>
+    <label><input type="checkbox" name="hobbies[]" value="Teatro"> Teatro</label>
+    <label><input type="checkbox" name="hobbies[]" value="Coleccionismo"> Coleccionismo</label>
+    <label><input type="checkbox" name="hobbies[]" value="Bricolaje"> Bricolaje</label>
+    <label><input type="checkbox" name="hobbies[]" value="Cosplay"> Cosplay</label>
+
+    <br><br>
+    <button type="button" id="insertar">Insertar</button>
+    <button type="button" id="enviarServidor">Enviar al servidor</button>
+</form>
+
+<h2 id="mensaje"></h2>
+
+<!-- TABLA -->
+<table>
+    <thead>
+    <tr>
+        <th>Nombre</th>
+        <th>Apellidos</th>
+        <th>Edad</th>
+        <th>Ciudad</th>
+        <th>Hobbies</th>
+    </tr>
+    </thead>
+
+    <tbody id="tbody"></tbody>
+</table>
+
+<!-- CÁLCULOS -->
+<p id="calculos"></p>
+
+<script>
+    $(document).ready(function () {
+
+        // ===============================
+        // VARIABLES GLOBALES
+        // ===============================
+        let listaUsuarios = []; // array principal
+
+        // ===============================
+        // LIMITAR HOBBIES A 3
+        // ===============================
+        $('input:checkbox').on('change', function () {
+            let marcados = $('input:checkbox:checked').length;
+
+            if (marcados >= 3) {
+                $('input:checkbox:not(:checked)').prop('disabled', true);
+            } else {
+                $('input:checkbox').prop('disabled', false);
+            }
+        });
+
+        // ===============================
+        // VALIDAR CAMPOS
+        // ===============================
+        function validar() {
+            if ($("#nombre").val() === "") return "nombre";
+            if ($("#apellidos").val() === "") return "apellidos";
+            if ($("#edad").val() === "") return "edad";
+            if ($("#ciudad").val() === "") return "ciudad";
+            return "";
+        }
+
+        // ===============================
+        // GENERAR TR
+        // ===============================
+        function generaTR(obj, index) {
+            return `
+        <tr data-index="${index}">
+            <td>${obj.nombre}</td>
+            <td>${obj.apellidos}</td>
+            <td>${obj.edad}</td>
+            <td>${obj.ciudad}</td>
+            <td>${obj.hobbies.join(" ")}</td>
+        </tr>`;
+        }
+
+        // ===============================
+        // ACTUALIZAR TABLA COMPLETA
+        // ===============================
+        function generarTabla() {
+            $("#tbody").empty();
+
+            listaUsuarios.forEach((obj, index) => {
+                $("#tbody").append(generaTR(obj, index));
+            });
+
+            activarBorrado();
+            calcularEstadisticas();
+        }
+
+        // ===============================
+        // BORRAR FILA Y ARRAY
+        // ===============================
+        function activarBorrado() {
+            $("#tbody tr").on("click", function () {
+                let index = $(this).data("index");
+                listaUsuarios.splice(index, 1); // borrar del array
+                generarTabla(); // refrescar tabla
+            });
+        }
+
+        // ===============================
+        // CALCULAR SUMA, MEDIA, MAX, MIN
+        // ===============================
+        function calcularEstadisticas() {
+            if (listaUsuarios.length === 0) {
+                $("#calculos").text("");
+                return;
+            }
+
+            let edades = listaUsuarios.map(u => parseInt(u.edad));
+
+            let suma = edades.reduce((a,b)=>a+b,0);
+            let media = (suma / edades.length).toFixed(2);
+            let max = Math.max(...edades);
+            let min = Math.min(...edades);
+
+            $("#calculos").html(`
+            Suma: ${suma} |
+            Media: ${media} |
+            Máximo: ${max} |
+            Mínimo: ${min}
+        `);
+        }
+
+        // ===============================
+        // INSERTAR USUARIO
+        // ===============================
+        $("#insertar").on("click", function () {
+
+            let campo = validar();
+            if (campo !== "") {
+                alert("El campo " + campo + " es obligatorio");
+                return;
+            }
+
+            let hobbies = [];
+            $('input[name="hobbies[]"]:checked').each(function () {
+                hobbies.push($(this).val());
+            });
+
+
+            let obj = {
+                nombre: $("#nombre").val(),
+                apellidos: $("#apellidos").val(),
+                edad: $("#edad").val(),
+                ciudad: $("#ciudad").val(),
+                hobbies: hobbies
+            };
+
+            listaUsuarios.push(obj);
+            generarTabla();
+        });
+
+        // ===============================
+        // ENVÍO AL SERVIDOR (AJAX)
+        // ===============================
+        $("#enviarServidor").on("click", function () {
+
+            $.ajax({
+                url: "https://lm.iesnervion.es/eco.php",
+                method: "POST",
+                data: JSON.stringify(listaUsuarios),
+                contentType: "application/json",
+                dataType: "json",
+
+                success: function (respuesta) {
+                    console.log("Respuesta del servidor:", respuesta);
+                    $("#mensaje").css("color", "green").text("Datos enviados correctamente");
+                },
+
+                error: function (xhr) {
+                    $("#mensaje").css("color", "red").text("Error: " + xhr.status);
+                }
+            });
+
+        });
+
+    }); // <-- fin de $(document).ready
+</script>
+
+
+</body>
+</html>
