@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio01: Reto con jQuery</title>
+
+    <!-- Cargar jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="js/model.js"></script>
+    <script src="js/view.js"></script>
+    <script src="js/controller.js"></script>
+
+</head>
+<body>
+
+<h1>Ejercicio01: RetoJquery</h1>
+
+<p>Hobbies:</p>
+<div style="border: 1px solid black;  max-width: 700px"  >
+    <input type="checkbox" id="deporte" name="checks" value="deporte">Deporte
+    <input type="checkbox" id="lectura" name="checks" value="lectura">Lectura
+    <input type="checkbox" id="musica" name="checks" value="música">Música
+    <input type="checkbox" id="juegos" name="checks" value="juegos">Juegos
+    <input type="checkbox" id="cine" name="checks" value="cine">Cine
+    <input type="checkbox" id="teatro" name="checks" value="teatro">Teatro
+    <input type="checkbox" id="coleccionismo" name="checks" value="coleccionismo">Coleccionismo
+    <input type="checkbox" id="bricolaje" name="checks" value="bricolaje">Bricolaje
+    <input type="checkbox" id="cosplay" name="checks" value="cosplay">Cosplay
+</div>
+
+<br>
+
+<label for="nombre">Nombre</label>
+<input type="text" id="nombre" placeholder="Introduce tu nombre">
+
+<label for="apellidos">Apellidos</label>
+<input type="text" id="apellidos" placeholder="Introduce tus apellidos">
+
+<label for="edad">Edad</label>
+<input type="number" id="edad" placeholder="Introduce tu edad">
+
+<label for="ciudad">Ciudad</label>
+<input type="text" id="ciudad" placeholder="Introduce tu ciudad">
+
+<button id="iniciar">Añadir</button>
+
+<table border="1" style="margin-top:20px;">
+    <thead>
+    <tr>
+        <th>Nombre</th>
+        <th>Apellidos</th>
+        <th>Edad</th>
+        <th>Ciudad</th>
+        <th>Hobbies</th>
+    </tr>
+    </thead>
+    <tbody id="bodyTabla"></tbody>
+</table>
+
+<h2>Estadísticas de edades</h2>
+<div id="estadisticas">
+    <p>Suma: <span id="sumaEdad">0</span></p>
+    <p>Máximo: <span id="maxEdad">0</span></p>
+    <p>Media: <span id="mediaEdad">0</span></p>
+    <p>Mínimo: <span id="minEdad">0</span></p>
+</div>
+
+</body>
+</html>
