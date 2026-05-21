@@ -1,0 +1,4 @@
+// view.js
+const View = {
+
+};

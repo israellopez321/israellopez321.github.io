@@ -1,4 +1,4 @@
-// model.js
+// Model.js
 const Model = {
     data: {
         items: [],		// Usamos un array como BD para usar como ejemplo
